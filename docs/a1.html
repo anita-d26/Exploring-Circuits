@@ -4,15 +4,153 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Assignment 1: Blink!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 1!</h1>
+    <h1>Blink!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 1!</p>
-    </div>
-  </body>
+      <h2>Schematic</h2>
+      <img src="images/blinkschematic.jpg" />
+      <p>Each LED is connected to a separate digital pin and grounded through a resistor which allows 
+       for independent control each of the 5 LEDs.</p>
+
+      <h2>Circuit</h2>
+      <img src="images/blinkcircuit.jpg">
+      <p>I used 220Ω resistors to limit the current through each LED, 
+        preventing damage while keeping brightness.</p>
+      <p>	Calculating resistance using Ohm's law</p>
+      <ul>
+        <li>Arduino output voltage = 5V</li>
+        <li>Typical LED voltage ≈ 2V</li>
+        <li>Desired current ≈ 20 mA (0.02 A)</li>
+      </ul>
+
+      <ul>
+        <li> Resistance = (V<sub>source</sub> − V<sub>LED</sub>) / I</li>
+        <li>R = (5V − 2V) / 0.02A</li>
+        <li>R = 3 / 0.02</li>
+        <li>R = 150 Ω</li>
+      </ul>
+      <p>Use a 220 Ω resistor!</p>
+    </p>
+
+      <h2>Code</h2>
+      <pre><code>
+        // Blink (5 LEDs)
+
+        // Store the digital pin number for LED 1
+        int pin1 = 2;
+        // Store the digital pin number for LED 2
+        int pin2 = 3;
+        // Store the digital pin number for LED 3
+        int pin3 = 4;
+        // Store the digital pin number for LED 4
+        int pin4 = 5;
+        // Store the digital pin number for LED 5
+        int pin5 = 6;
+
+        // Setup runs once Arduino starts/resets
+        void setup() {
+          // Initialize LED 1 pin as output
+          pinMode(pin1, OUTPUT);
+          // Initialize LED 2 pin as output
+          pinMode(pin2, OUTPUT);
+          // Initialize LED 3 pin as output
+          pinMode(pin3, OUTPUT);
+          // Initialize LED 4 pin as output
+          pinMode(pin4, OUTPUT);
+          // Initialize LED 5 pin as output
+          pinMode(pin5, OUTPUT);
+        }
+
+        // Loops repeatedly after setup
+        void loop() {
+        // pin1 LED ON
+        digitalWrite(pin1, HIGH);
+        // Keep pin1 LED on for 600 milliseconds
+        delay(600);
+        // pin1 LED OFF
+        digitalWrite(pin1, LOW);
+
+        // pin2 LED ON
+        digitalWrite(pin2, HIGH);
+        // Keep pin2 LED on for 700 milliseconds
+        delay(700);
+        // pin2 LED OFF
+        digitalWrite(pin2, LOW);
+
+        // pin3 LED ON
+        digitalWrite(pin3, HIGH);
+        // Keep pin3 LED on for 800 milliseconds
+        delay(800);
+        // pin3 LED OFF
+        digitalWrite(pin3, LOW);
+
+        // pin4 LED ON
+        digitalWrite(pin4, HIGH);
+        // Keep pin4 LED on for 900 milliseconds
+        delay(900);
+        // pin4 LED OFF
+        digitalWrite(pin4, LOW);
+
+        // pin5 LED ON
+        digitalWrite(pin5, HIGH);
+        // Keep pin5 LED on for 1000 milliseconds
+        delay(1000);
+        // pin5 LED OFF
+        digitalWrite(pin5, LOW);
+
+        // pin4 LED ON
+        digitalWrite(pin4, HIGH);
+        // Keep pin4 LED on for 900 milliseconds
+        delay(900);
+        // pin4 LED OFF
+        digitalWrite(pin4, LOW);
+
+        // pin3 LED ON
+        digitalWrite(pin3, HIGH);
+        // Keep pin3 LED on for 800 milliseconds
+        delay(800);
+        // pin3 LED OFF
+        digitalWrite(pin3, LOW);
+
+        // pin2 LED ON
+        digitalWrite(pin2, HIGH);
+        // Keep pin2 LED on for 700 milliseconds
+        delay(700);
+        // pin2 LED OFF
+        digitalWrite(pin2, LOW);
+      }
+    </code></pre>
+          
+    <h2>Circuit Operation</h2>
+      <img src="images/blink.gif">
+      <p>The LEDs light up in sequence from left to right and then back to left, 
+        staying lit for a slightly different duration each time to create a wave effect.</p>
+
+    <h2>Questions</h2>
+      <h3>1: Voltage across the LEDs.</h3>
+        <img src="images/blinkgraph.jpg">
+        <p>Each line on the graph represents the voltage across one LED over time.
+          When an LED is ON, the voltage across it rises to around 2V. 
+          When the LED is OFF, the voltage drops to 0V. The staggered timing of the voltage reflects the delays 
+          outlined in the code ranging from 600ms to 1000ms and totaling 6.4 seconds per cycle.</p>
+
+      <h3>2: How many LEDs could you blink independently with your Arduino? How much current would that draw?</h3>
+        <p>The Arduino total current limit is 200 mA (ideally less than 150 mA) across all pins,
+          so you could make around 10 LEDs blink independently and safely based off the recommended current 20mA for each one.             
+          If you were to calculate in theory ignoring safety, the Arduino has 14 pins so you could draw in 280 mA in total.</p>
+    
+      <h3>3: How fast do you need to blink your LEDs until you no longer can tell that they are blinking?</h3>
+        <p>I initally went to the opposite to what I originally programmed and tested smaller delay (1-5 ms) and while the lights flickered, 
+          you couldn’t tell they were blinking in sequence. To verify, I tested with a greater delay (22-25 ms) and you could still tell they were blinking.</p>
+
+      <h3>4: Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If no, you can either leave this question blank, or provide other information if you'd like.</h3>
+        <p>I used AI tools to make a checklist of all the deliverables for this assignment to double check I did not miss any part, once I was finished.
+          I also used it to help me format my style.css file to make sure all the content looked presentable.</p>
+     
+      </div>
+  </body>   
 </html>
