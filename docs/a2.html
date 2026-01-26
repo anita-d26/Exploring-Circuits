@@ -4,15 +4,128 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
 
-    <title>Example Student's HCDE 439 Physical Computing Page!</title>
+    <title>Fade!</title>
 
     <link href="style.css" rel="stylesheet" type="text/css" />
   </head>
   <body>
-    <h1>Example Student's Assignment 2!</h1>
+    <h1>Fade!</h1>
     <div class="header">
-      <img src="red-panda.jpg" />
-      <p>Here is all the documentation for assignment 2!</p>
-    </div>
-  </body>
+      <h2>Schematic</h2>
+      <img src="images/fadeschematic.jpg" />
+      <p>Each LED is connected to a digital output pin (9–12) through a 220Ω resistor to limit current. 
+        A pushbutton is connected to digital pin 2 using a pull-down resistor configuration (input reads LOW when unpressed and HIGH when pressed) with 10k resistor.</p>
+
+      <h2>Circuit</h2>
+      <img src="images/fadecircuit.jpg">
+      <p>The breadboard layout mirrors the schematic, with each LED connected in series with a resistor and pushbutton using pull-down resistor, as well as all sharing a common ground.</p>
+
+      <h2>Code</h2>
+      <pre><code>
+        /*
+          Anita's Toy for HCDE 439 A2
+
+          Buttons!!
+        */
+
+        // CONSTANTS
+        const int buttonPin = 2;  // pushbutton pin
+        const int redLED = 9;    // red LED pin
+        const int blueLED = 10;    // blue LED pin
+        const int yellowLED = 11;    // yellow LED pin
+        const int greenLED = 12;    // green LED pin
+        const int ledPins[] = {redLED, blueLED, yellowLED, greenLED}; // array of all LEDs
+        const int numLEDs = 4; // number of total LEDs
+
+        // VARIABLES
+        int buttonState = 0;  // current pushbutton status
+        int prevButtonState = buttonState; // previous pushbutton status
+        int ledIndex = 0; // which LED is currently active
+
+        // SETUP FUNCTION
+        void setup() {
+          pinMode(redLED, OUTPUT); // initialize red LED pin as an output
+          pinMode(blueLED, OUTPUT); // initialize blue LED pin as an output
+          pinMode(yellowLED, OUTPUT); // initialize yellow LED pin as an output
+          pinMode(greenLED, OUTPUT); // initialize green LED pin as an output
+
+          pinMode(buttonPin, INPUT); // initialize the pushbutton pin as an input
+        }
+
+        // LOOP FUNCTION
+        void loop() {
+          // read the state of the pushbutton value
+          buttonState = digitalRead(buttonPin);
+
+          // detect when button goes from LOW to HIGH
+          if (prevButtonState == LOW && buttonState == HIGH) {
+
+            // fade out all LEDs
+            for (int i = 0; i < numLEDs; i++) { // loop through each LED
+              for (int b = 255; b >= 0; b -= 5) { // decrease brightness level from 0-255
+                analogWrite(ledPins[i], b); // set brightness
+                delay(10); // short delay to see the fade action
+              }
+            }
+
+            // fade in the current LED
+            for (int b = 0; b <= 255; b += 5) { // increase brightness level from 0-255
+              analogWrite(ledPins[ledIndex], b); // set brightness
+              delay(10); // short delay to see the fade action
+            }
+
+            // move to the next LED for the next press
+            ledIndex = (ledIndex + 1) % numLEDs;
+          }
+
+          // save the button state for the next loop
+          prevButtonState = buttonState;
+        }
+    </code></pre>
+          
+    <h2>Circuit Operation</h2>
+      <img src="images/fade.gif">
+      <p>When pressing the button, the current LED fades out, cycles through all LEDs, and the next LED in line fades in. 
+        Pressing again cycles through all four LEDs.</p>
+
+    <h2>Questions</h2>
+      <h3>1: Voltage across the LEDs.</h3>
+        <img src="images/fadegraph.jpg">
+        <p>The chart shows the voltage across an LED with different PWM values:
+            <ul>
+              <li>analogWrite(led, 64) - 25% (~1.25V average),</li>
+              <li>analogWrite(led, 128) - 50% (~2.5V average),</li>
+              <li>analogWrite(led, 255) - 100% (~5V, full).</li>
+            </ul>
+        </p>
+
+      <h3>2: If all your LEDs were on simultaneously, what would the total current draw be? 
+        Is this above or below the total Arduino current draw limits? 
+        If all your LEDs were on, how long would your circuit run if powered by a 1200 mAh battery?</h3>
+        <p>The circuit would run for approximately 15 hours on a 1200 mAh battery!</p>
+
+        <p>We know:</p>
+        <ul>
+            <li>Each LED ≈ 20 mA > 4 LED ≈ 80 mA total</li>
+            <li>Battery capacity = 1200 mAh</li>
+        </ul>
+
+        <p>Calculating battery life:</p>
+        <ul>
+            <li> Battery life = battery capacity / total current draw </li>
+            <li>Battery life = 1200 mAh / 80 mA</li>
+            <li>Battery life = 15 hours </li>
+        </ul>
+
+
+      <h3>3: How does the actual voltage of one of the LEDs when it's on compare to the theoretical forward voltage for your LED color?</h3>
+      <p>The actual voltage of my red and yellow LEDs were 1.9 volts, which is close to the theoretical forward voltage typically around 1.8-2.2 volts.
+        The green and blue LEDs measured at 2.7 and 2.8 volts respectively, which landed a littler lower than the theoretical forward voltage around 2.5-3.3 volts.
+      </p>
+
+      <h3>4: Did you use AI tools in completing this assignment? If yes, please provide details on how/when, as well as a brief reflection. If no, you can either leave this question blank, or provide other information if you'd like.</h3>
+        <p>I used AI tools help me learn how to make the LEDs fade from one to another when writing the code.</p>
+     
+      </div>
+  </body>   
 </html>
