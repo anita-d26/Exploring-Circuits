@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+
+    <title>Libraries!</title>
+
+    <link href="style.css" rel="stylesheet" type="text/css" />
+  </head>
+  <body>
+    <h1>Libraries!</h1>
+    <div class="header">
+
+
+        <h2>Schematic</h2>
+            <img src="images/libraries_schematic.jpg" />
+            <p>
+                Buttons on pins 2–5 use internal pull-up resistors to detect presses (LOW when pressed). 
+                LEDs on pins 10–13 are connected with 220Ω resistors.
+            </p>
+            <p>  
+                Resistor calculation: Each LED has a forward voltage of ~2V and a desired current of 20 mA. Using Ohm’s law:
+            <ul>
+                <li> Resistance = (V<sub>source</sub> − V<sub>LED</sub>) / I</li>
+                <li>R = (5V − 2V) / 0.02A</li>
+                <li>R = 3 / 0.02</li>
+                <li>R = 150 Ω</li>
+            </ul>
+            </p>
+                A 220Ω resistor was chosen to be slightly safer, reducing current to ~13 mA while keeping the LED bright.
+            </p>
+            <p>
+                The buzzer on pin 9 plays musical notes (C, E, G, high C) corresponding to each button, 
+                and the servo on pin 6 moves to angles of 30°, 60°, 90°, or 120°. 
+            </p>
+
+
+
+        <h2>Circuit</h2>
+            <img src="images/libraries_circuit.jpg">
+            <p>
+               Each button input triggers an LED, a buzzer note, and servo movement. 
+               Resistors protect the LEDs and INPUT_PULLUP prevents floating pins on the buttons.
+            </p>
+
+
+        <h2>Code</h2>
+            <pre><code>
+
+                /*
+                    HCDE 438 - Musical Touchpad with LEDs, Servo, and Buzzer
+                    Anita Daniel
+                */
+
+                #include <Servo.h>     // control servo motor
+                #include <Bounce2.h>   // to prevent false triggering due to button bounce
+
+                /*
+                Pins
+                */
+                const int buttonPins[4] = {2, 3, 4, 5};         // buttons
+                const int ledPins[4] = {10, 11, 12, 13};        // LEDs
+                const int buzzerPin = 9;                        // buzzer
+                const int servoPin = 6;                         // servo
+                const int servoAngles[4] = {30, 60, 90, 120};   // servo angles for each button
+                const int notes[4] = {262, 330, 392, 523};      // buzzer frequencies: C, E, G, high C
+
+                Servo myServo;              // servo object
+                Bounce debouncers[4];       // debounce object for each button
+
+
+                /*
+                Setup
+                */
+                void setup() {
+                Serial.begin(9600);  // initialize serial for debugging
+
+                // initialize buttons with pull-ups and attach debouncers
+                for (int i = 0; i < 4; i++) {
+                    pinMode(buttonPins[i], INPUT_PULLUP);  // pull-up to avoid floating
+                    debouncers[i].attach(buttonPins[i]);  // attach button to debouncer
+                    debouncers[i].interval(25);           // debounce interval in ms
+                }
+
+                // initialize LEDs
+                for (int i = 0; i < 4; i++) {
+                    pinMode(ledPins[i], OUTPUT);      // set LED pins as outputs
+                    digitalWrite(ledPins[i], LOW);    // start with LEDs off
+                }
+
+                // initialize buzzer
+                pinMode(buzzerPin, OUTPUT);         // set buzzer as output
+
+                // initialize servo
+                myServo.attach(servoPin);           // attach servo to pin
+                myServo.write(0);                   // start servo at 0 degrees
+                }
+
+
+                /*
+                Loop
+                */
+                void loop() {
+                // update all debouncers to read button state
+                for (int i = 0; i < 4; i++) {
+                    debouncers[i].update();               // update button state
+
+                    // Check if button was just pressed
+                    if (debouncers[i].fell()) {          // triggered when pressed
+                    Serial.print("Button ");
+                    Serial.print(i + 1);
+                    Serial.println(" pressed");         // debug print
+
+                    digitalWrite(ledPins[i], HIGH);    // turn on corresponding LED
+                    tone(buzzerPin, notes[i], 300);    // play note on buzzer
+                    myServo.write(servoAngles[i]);     // move servo to angle
+                    }
+
+                    // check if button was just released
+                    if (debouncers[i].rose()) {          // triggered when released
+                    digitalWrite(ledPins[i], LOW);     // turn off corresponding LED
+                    }
+                }
+
+                delay(10);  // small delay
+                }
+            </code></pre>
+           
+            
+        <h2>Circuit Operation</h2>
+            <p>
+                Video Link: https://drive.google.com/file/d/1giQJOQthkWXdfw8bpH4j4CBUJ7kaBggi/view?usp=sharing
+            </p>
+            <p>
+                When each button is pressed, 
+                (1) the corresponding LED lights up - providing visual feedback,
+                (2) the buzzer plays a specific note - providing auditory feedback, and 
+                (3) the servo maps to an angle - providing mechanical feedback. 
+            </p>
+
+            <h3>Button Mapping</h3>
+                <table border="1" cellpadding="8">
+                <tr>
+                    <th>Button</th>
+                    <th>LED Pin</th>
+                    <th>Note (Hz)</th>
+                    <th>Servo Angle</th>
+                </tr>
+                <tr><td>1</td><td>10</td><td>262</td><td>30°</td></tr>
+                <tr><td>2</td><td>11</td><td>330</td><td>60°</td></tr>
+                <tr><td>3</td><td>12</td><td>392</td><td>90°</td></tr>
+                <tr><td>4</td><td>13</td><td>523</td><td>120°</td></tr>
+                </table>
+
+
+        <h2>Questions</h2>
+            <h3>
+                1: Say you are using a servo motor you attach to pin 9. In your loop() you have the following code:
+                
+                <code><pre>
+                
+                void loop() {
+                    for (pos = 0; pos <= 180; pos += 1) {
+                        myservo.write(pos); 
+                        delay(100); 
+                    }
+                }
+
+                </code></pre>
+
+                Draw a graph with the x-axis as time and the y-axis as voltage at pin 9 with respect to ground
+            </h3>
+                <img src="images/libraries_graph0.png">
+                <img src="images/libraries_graph1.png">
+                <img src="images/libraries_graph2.png">
+                <img src="images/libraries_graph3.png">
+                <img src="images/libraries_graph4.png">
+                <img src="images/libraries_graph5.png">
+                
+                <p> 
+                    The voltage at pin 9 is a PWM signal that goes between 0 V and 5 V. 
+                    As the loop increments pos from 0° to 180°, the pulse width increases linearly from 1 ms to 2 ms, so the average voltage rises slowly over time. 
+                    Each step lasts 100 ms due to the delay.
+                </p>
+
+        
+            <h3>2: Your input device is slightly broken, leading it to give us an erroneous reading 1% of the time. 
+                How can we address this? Answer in (pseudo)code.
+            </h3>
+                <p>
+                    To fix this, we compare the current reading to the previous valid reading and a maximum threshold. 
+                    If it jumps too far or exceeds the bounds, we replace it with the previous value, preventing spikes from affecting the data.        
+
+                    <code><pre>
+                    const int MAX_BOUND = 1023;   // maximum sensor value
+                    int prevSensorValue = 0;      // stores last valid reading
+                    
+                    int sensorValue = analogRead(sensorPin);
+
+                    if ((sensorValue > 1.3 * prevSensorValue) || (sensorValue > MAX_BOUND)) {
+                    // reading is erroneous, use previous value
+                        sensorValue = prevSensorValue;
+                    } else {
+                        prevSensorValue = sensorValue; // valid reading, update previous
+                    }
+                    </code></pre>
+                </p>
+
+
+        
+            <h3>
+                3: Your input device is slightly noisy, leading the measurement to randomly deviate from the true measurement up or down by 10%. 
+                How can we address this? Answer in (pseudo)code.
+            </h3>
+                <p>
+                    We can smooth the data using a sliding window average. 
+                    We keep the last 10 readings, compute their average, and use this as the current value to reduce noise.
+                </p>
+
+                <code><pre>
+                const int WINDOW_SIZE = 10;
+                int readings[WINDOW_SIZE];  // circular buffer for last 10 readings
+                int index = 0;
+                int sum = 0;
+                
+                int sensorValue = analogRead(sensorPin);
+
+                // remove oldest value from sum
+                sum -= readings[index];
+
+                // store new reading
+                readings[index] = sensorValue;
+
+                // add new value to sum
+                sum += readings[index];
+
+                // increment index, wrap around
+                index = (index + 1) % WINDOW_SIZE;
+
+                // calculate smoothed value
+                int smoothedValue = sum / WINDOW_SIZE;
+                </code></pre>
+
+            <h3>
+                4: Did you use AI tools in completing this assignment?
+            </h3>
+                <p>
+                    I used AI tools to brainstorm additional libraries to include in this project and to think through integration strategies for Bounce2.
+                    Specifically, I discussed which library features could improve the project and how to implement them without introducing conflicts.
+                    Using AI helped me refine my design approach to make sure the libraries worked together correctly.
+
+                </p>
+      </div>
+  </body>   
+</html>
