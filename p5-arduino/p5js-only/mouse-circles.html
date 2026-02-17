@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>p5.js Sketch</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.7.0/p5.min.js"></script>
+</head>
+
+<body>
+    <script>
+        function setup() {
+            createCanvas(800, 600);
+            background(220);
+        }
+
+        function draw() {
+            if (mouseIsPressed === true) {
+                fill(0);
+            } else {
+                fill(255);
+            }
+            circle(mouseX, mouseY, 100);
+        }
+    </script>
+</body>
+
+</html>

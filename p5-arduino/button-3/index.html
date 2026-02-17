@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <script src="serial.js"></script>
+</head>
+
+<body>
+    <button id="connectBtn">Connect</button>
+    <h1 id="status">Not connected</h1>
+
+    <script>
+        const serial = new SimpleSerial();
+
+        // Connect / disconnect
+        document.getElementById('connectBtn').addEventListener('click', async function () {
+            if (!serial.opened()) {
+                await serial.open(9600);
+                document.getElementById('connectBtn').textContent = "Disconnect";
+            } else {
+                await serial.close();
+                document.getElementById('connectBtn').textContent = "Connect";
+                document.getElementById('status').textContent = "Not connected";
+            }
+        });
+
+        // Poll for data
+        setInterval(function () {
+            if (!serial.opened()) return;
+
+            let line = serial.readUntil("\n").trim();
+            if (!line) return;
+
+            if (line === "1") {
+                document.getElementById('status').textContent = "Pressed!";
+            } else if (line === "0") {
+                document.getElementById('status').textContent = "Not pressed";
+            }
+        }, 50);
+    </script>
+</body>
+
+</html>
