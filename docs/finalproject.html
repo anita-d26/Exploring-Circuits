@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, maximum-scale=1.0" />
+        <title>FlashMemory!</title>
+        <link href="style.css" rel="stylesheet" type="text/css" />
+    </head>
+
+    <body>
+    <h1>FlashMemory!</h1>
+
+    <div class="header">
+
+    <h2>Concept</h2>
+    <p>
+    <strong>
+        FlashMemory is an interactive LED-based memory game that helps users improve short-term memory and pattern recognition skills.  
+    </strong> 
+    </p>
+    <p>
+        It responds to a start button press by generating a blinking LED sequence, and it provides visual feedback when it detects correct or incorrect user input.
+    </p>
+
+      <img src="images/finalproject_sketch.jpg" />
+
+      <p>
+        <strong>Input:</strong> Push button (start/reset), keyboard input via Serial.
+        <br>
+        <strong>Output:</strong> LED blinking sequences, success/failure feedback patterns,
+        and score tracking via Serial Monitor.
+    </p>
+
+      <h2>Anticipated Bill of Materials</h2>
+      <ul>
+        <li>Arduino Uno R3</li>
+        <li>Breadboard</li>
+        <li>4 LEDs (red, blue, yellow, green)</li>
+        <li>Push button (start/reset)</li>
+        <li>220Ω resistors (for LEDs)</li>
+        <li>10kΩ resistor (pull-down resistor)</li>
+        <li>Jumper wires</li>
+        <li>USB cable</li>
+        <li>Computer with Arduino IDE (uses digital logic)</li>
+        <li>Enclosure (final prototype housing)</li>
+      </ul>
+
+
+     <h2>Timeline and Contingency Plans</h2>
+    <ul>
+    <li>
+        <strong>Week 1:</strong> Build basic LED + button circuit and program blinking sequence.
+        <ul>
+        <li>If encountering circuit issues -> test one LED first to verify correct behavior before incorportating all 4.</li>
+        </ul>
+    </li>
+
+    <li>
+        <strong>Week 2 - </strong> Implement random sequence generator, feedback logic, and level progression.
+        <ul>
+        <li>If random sequence generation does not work as planned -> implement a fixed hardcoded sequence to demonstrate functionality.</li>
+        <li>If level progression logic too complex -> simplify to a basic incrementing difficulty level.</li>
+        </ul>
+    </li>
+
+    <li>
+        <strong>Week 3:</strong> Finalize enclosure, clean wiring, and complete full system testing.
+        <ul>
+        <li>If enclosure fabrication becomes time-constrained -> create a cardboard housing to ensure the project is integrated into a physical product.</li>
+        </ul>
+    </li>
+    </ul>
+    </div>
+  </body>
+</html>
