@@ -1,4 +1,3 @@
-// --------------------- VARIABLES --------------------- //
 // Web Serial API variables
 let port, reader, inputDone, inputStream;
 
@@ -82,7 +81,6 @@ async function connectSerial() {
   readLoop();                                 // Start reading incoming data
   sendColorToArduino();                        // Send initial brush color to LED
 }
-
 // Buffer to store incomplete serial lines
 let buffer = "";
 
