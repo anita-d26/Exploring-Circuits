@@ -1,6 +1,4 @@
-# HCDE 439 Physical Computing Winter 2025
-
-Welcome to the HCDE 439 example Github repository!
+Welcome to my exploration of physical computing!
 
 Student: Anita Daniel
 
